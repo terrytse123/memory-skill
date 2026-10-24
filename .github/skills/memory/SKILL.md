@@ -105,11 +105,14 @@ After the work is done (or when an error/self-heal occurs):
    **Issue format** (for `issues.md`):
    ```md
    ### [Short error/issue title]
+   - **Status**: open | resolved | outdated
    - **When**: Situation or trigger
    - **Symptom**: What failed or what error appeared
    - **Resolution**: What fixed it (or “unresolved”)
    - **Avoidance**: How future runs should prevent or handle it
+   - **Confidence**: low | medium | high
    - **First seen**: YYYY-MM-DD
+   - **Last confirmed**: YYYY-MM-DD
    ```
 
    **Lesson format** (for `lessons.md`):
@@ -118,12 +121,31 @@ After the work is done (or when an error/self-heal occurs):
    - **When**: Situation or trigger
    - **Lesson**: What to do (or avoid)
    - **Why**: Reason or evidence
-   - **Confidence**: low / medium / high
+   - **Confidence**: low | medium | high
    - **First seen**: YYYY-MM-DD
+   - **Last confirmed**: YYYY-MM-DD
    ```
 
 3. Prefer updating an existing entry over creating a near-duplicate.
-4. Keep everything short and actionable. Delete or mark outdated items.
+4. When you see the same issue or lesson again, update `Last confirmed` and raise `Confidence` if appropriate.
+5. Keep everything short and actionable.
+
+## 4. Maintenance (periodic — recommended weekly or after major changes)
+Run a light maintenance pass to keep memory correct:
+
+1. Review `memory/issues.md` and `memory/lessons.md`.
+2. For each item:
+   - If it is no longer true or relevant → set **Status** to `outdated` or delete it.
+   - If it was confirmed again in this run → update **Last confirmed** and raise **Confidence**.
+   - If it is a near-duplicate → merge into the better entry and remove the other.
+3. In `memory/log.md`, keep only recent entries (or move older ones to an archive section). Prefer the last 30–60 days of active use.
+4. Prefer fewer high-quality entries over many low-quality ones.
+5. After maintenance, add a one-line note to `memory/log.md` summarizing what was cleaned.
+
+Trigger maintenance when:
+- The user or workflow asks to “review memory”, “clean memory”, or “update memory”
+- A fixed interval has passed (e.g. weekly)
+- A major project change occurs
 
 ## Integration pattern for any agent workflow
 ```text
@@ -158,4 +180,4 @@ build_memory(result, observations)
 - Error / failure / self-heal → immediately update `memory/issues.md`.
 - “Remember this” / “Don’t do that again” → update the appropriate memory file.
 - “What have you learned?” → summarize relevant lessons and issues.
-- “Update memory” → run the Build step.
+- “Update memory” / “Review memory” / “Clean memory” → run the Build step and/or the Maintenance pass.
