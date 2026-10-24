@@ -16,15 +16,56 @@ memory/
 └── decisions.md        # Important decisions + rationale
 ```
 
+## Auto-create memory files
+If any of the memory files do not exist, create them on first use with the templates below. Do this before the Query step if needed.
+
+**memory/log.md**
+```md
+# Session Log
+
+Append-only chronological notes. Keep each entry to 1–2 sentences.
+
+## Entries
+```
+
+**memory/lessons.md**
+```md
+# Lessons Learned
+
+Distilled insights, patterns, and gotchas that should influence future work.
+Prefer updating an existing lesson over adding a near-duplicate.
+
+## Lessons
+```
+
+**memory/preferences.md**
+```md
+# Preferences & Rules
+
+Stable preferences, coding style, communication style, and hard rules the agent should follow.
+
+## Preferences
+```
+
+**memory/decisions.md**
+```md
+# Decisions
+
+Important decisions with short rationale so future sessions understand context.
+
+## Decisions
+```
+
 ## 1. Query (start of every significant run)
 Before acting, the agent must:
 
-1. Read the most relevant files:
+1. Ensure the memory files exist (create them with the templates above if missing).
+2. Read the most relevant files:
    - `memory/lessons.md`
    - `memory/preferences.md`
    - Recent entries in `memory/log.md`
-2. Mentally filter for items that match the current task.
-3. Explicitly note any applicable lessons or preferences (or state “no relevant memory”).
+3. Mentally filter for items that match the current task.
+4. Explicitly note any applicable lessons or preferences (or state “no relevant memory”).
 
 If the workflow has a planning step, include the retrieved memory in the plan.
 
