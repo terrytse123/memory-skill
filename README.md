@@ -8,6 +8,7 @@ The agent:
 1. **Queries** relevant past experience (including past issues) before starting work
 2. **Acts** on the task
 3. **Builds** new memory (especially errors and self-heal results) so the next run is better
+4. **Maintains** memory periodically so it stays correct and does not go stale
 
 Memory files are created automatically on first use if they do not exist.
 
@@ -49,6 +50,9 @@ After the task (or when an error / self-heal occurs):
 - Update memory/issues.md with any errors and their resolutions.
 - Update memory/lessons.md, memory/preferences.md, or memory/decisions.md with any other reusable knowledge.
 - Follow the formats defined in the memory skill.
+
+Periodically (or when asked):
+- Run a maintenance pass: mark outdated items, update Last confirmed, merge duplicates, and trim old log entries.
 ```
 
 ### Step 3: Use it
@@ -61,6 +65,7 @@ Run your agent normally. On the first significant task it will create the memory
 | **Query** | Start of task | Creates missing memory files if needed, then reads issues, lessons, preferences, and recent log |
 | **Act** | During work | Does the task while noticing errors, self-heal attempts, gotchas, and patterns |
 | **Build** | End of task (or on error) | Writes a short log entry and records issues/resolutions plus any lessons |
+| **Maintain** | Periodic / on request | Reviews memory, marks outdated items, updates confidence, merges duplicates |
 
 ## Memory file formats
 
@@ -72,11 +77,14 @@ Run your agent normally. On the first significant task it will create the memory
 ### `memory/issues.md` (for errors & self-heal)
 ```md
 ### Short error/issue title
+- **Status**: open | resolved | outdated
 - **When**: Situation or trigger
 - **Symptom**: What failed or what error appeared
 - **Resolution**: What fixed it (or “unresolved”)
 - **Avoidance**: How future runs should prevent or handle it
+- **Confidence**: low | medium | high
 - **First seen**: YYYY-MM-DD
+- **Last confirmed**: YYYY-MM-DD
 ```
 
 ### `memory/lessons.md`
@@ -85,19 +93,30 @@ Run your agent normally. On the first significant task it will create the memory
 - **When**: Situation or trigger
 - **Lesson**: What to do (or avoid)
 - **Why**: Reason or evidence
-- **Confidence**: low / medium / high
+- **Confidence**: low | medium | high
 - **First seen**: YYYY-MM-DD
+- **Last confirmed**: YYYY-MM-DD
 ```
 
 ### `memory/preferences.md` and `memory/decisions.md`
 Plain markdown lists or short dated notes.
+
+## Maintenance
+Periodically (weekly or after major changes) the agent should review memory:
+
+- Mark or delete outdated items
+- Update `Last confirmed` and raise confidence on repeated items
+- Merge near-duplicates
+- Trim old log entries
+
+Example prompt: “Review and clean the memory files.”
 
 ## Tips for good results
 - The Memory Protocol instruction is required. Without it the agent has the skill but will not use it automatically.
 - For self-healing workflows, always record the issue + resolution in `issues.md` after a failure or heal.
 - Prefer updating existing entries over creating near-duplicates.
 - Keep entries short and actionable.
-- Periodically review `issues.md` and `lessons.md` and delete low-value or outdated items.
+- Run a maintenance pass regularly so memory does not go stale.
 
 ## Example first run (with an error)
 1. Agent sees the Memory Protocol.
@@ -106,4 +125,4 @@ Plain markdown lists or short dated notes.
 4. Agent records the error + resolution in `issues.md` and adds a log entry.
 5. Next run starts by reading `issues.md` and can avoid or handle the same problem.
 
-That’s it. Each completed run (especially ones with errors or self-heals) improves the memory for the next one.
+That’s it. Each completed run (especially ones with errors or self-heals) improves the memory for the next one, and periodic maintenance keeps it correct.
